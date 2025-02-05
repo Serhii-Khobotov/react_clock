@@ -5,7 +5,7 @@ import { Clock } from './components/Clock';
 type State = {
   hasClock: boolean;
   clockName: string;
-}
+};
 
 export class App extends React.Component<State> {
   state: State = {
@@ -21,16 +21,16 @@ export class App extends React.Component<State> {
 
   componentDidMount() {
     window.setInterval(() => {
-      this.setState({ clockName: this.getRandomName() })
-    }, 3300)
+      this.setState({ clockName: this.getRandomName() });
+    }, 3300);
 
     document.addEventListener('click', () => {
       this.setState({ hasClock: true });
     });
 
-    document.addEventListener('contextmenu',(e: MouseEvent) => {
+    document.addEventListener('contextmenu', (e: MouseEvent) => {
       e.preventDefault();
-  
+
       this.setState({ hasClock: false });
     });
   }
@@ -40,9 +40,7 @@ export class App extends React.Component<State> {
       <div className="App">
         <h1>React clock</h1>
 
-        {this.state.hasClock && (
-          <Clock name={this.state.clockName} />
-        )}
+        {this.state.hasClock && <Clock name={this.state.clockName} />}
       </div>
     );
   }
