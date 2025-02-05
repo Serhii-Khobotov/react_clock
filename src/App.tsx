@@ -1,36 +1,49 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { Clock } from './components/Clock';
 import './App.scss';
+import { Clock } from './components/Clock';
 
-export const App: React.FC = () => {
-  const [hasClock, setHasClock] = React.useState(true);
+type State = {
+  hasClock: boolean;
+  clockName: string;
+}
 
-  const handleShowClock = () => {
-    setHasClock(true);
+export class App extends React.Component<State> {
+  state: State = {
+    hasClock: true,
+    clockName: 'Clock-0',
   };
 
-  const handleHideClock = (e: MouseEvent) => {
-    e.preventDefault();
+  getRandomName(): string {
+    const value = Date.now().toString().slice(-4);
 
-    setHasClock(false);
-  };
+    return `Clock-${value}`;
+  }
 
-  useEffect(() => {
-    document.addEventListener('click', handleShowClock);
-    document.addEventListener('contextmenu', handleHideClock);
+  componentDidMount() {
+    window.setInterval(() => {
+      this.setState({ clockName: this.getRandomName() })
+    }, 3300)
 
-    return () => {
-      document.removeEventListener('click', handleShowClock);
-      document.removeEventListener('contextmenu', handleHideClock);
-    };
-  }, [hasClock]);
+    document.addEventListener('click', () => {
+      this.setState({ hasClock: true });
+    });
 
-  return (
-    <div className="App">
-      <h1>React clock</h1>
+    document.addEventListener('contextmenu',(e: MouseEvent) => {
+      e.preventDefault();
+  
+      this.setState({ hasClock: false });
+    });
+  }
 
-      {hasClock && <Clock />}
-    </div>
-  );
-};
+  render() {
+    return (
+      <div className="App">
+        <h1>React clock</h1>
+
+        {this.state.hasClock && (
+          <Clock name={this.state.clockName} />
+        )}
+      </div>
+    );
+  }
+}
